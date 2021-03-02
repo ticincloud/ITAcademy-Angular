@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acudits</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-                integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-                crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-    crossorigin=""></script>
-    <style> 
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <style>
         #mapid {
             width: 90%;
             height: 500px;
@@ -19,12 +16,18 @@
         }
     </style>
 </head>
-<body >
+
+<body>
     <div id="mapid"></div>
-   <script>
-        var stlPopup = {'minWidth': '300'};
+    <script>
+        var stlPopup = {
+            'minWidth': '300'
+        };
         var mymap = L.map('mapid').setView([41.387092, 2.169816], 14);
         var popup;
+        var marker;
+        var inici = true;
+
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
             maxZoom: 18
@@ -34,11 +37,18 @@
         mymap.on('click', onMapClick);
 
         function onMapClick(e) {
+            if (!inici) {
+                mymap.removeLayer(marker);
+            }
+            marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap);
+
             popup
-                .setLatLng(e.latlng) 
-                .setContent('Lat: '+e.latlng.lat.toString() + " Lng: " +  e.latlng.lng.toString()) 
-                .openOn(mymap); 
+                .setLatLng(e.latlng)
+                .setContent('Lat: ' + e.latlng.lat.toString() + " Lng: " + e.latlng.lng.toString())
+                .openOn(mymap);
+            inici = false;
         }
-</script> 
+    </script>
 </body>
+
 </html>
