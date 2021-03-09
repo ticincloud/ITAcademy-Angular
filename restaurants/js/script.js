@@ -1,7 +1,11 @@
-var map = L.map('mapid').on('load', onMapLoad);
+var map = L.map('mapid')
+    .on('load', onMapLoad)
+    .on('locationfound', onLocationFound)
+    .on('locationerror', onLocationError);
+
 
 //posició actual
-map.locate({ setView: true, maxZoom: 25 });
+map.locate({ setView: true, maxZoom: 16 });
 
 var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
@@ -18,6 +22,22 @@ $('#kind_food_selector').on('change', function() {
     console.log(this.value);
     render_to_map(data_markers, this.value);
 });
+
+function onLocationFound(e) {
+    var radius = e.accuracy / 2;
+
+    L.marker(e.latlng).addTo(map);
+    //.bindPopup('Pos. actual').openPopup();
+
+    //L.circle(e.latlng, radius).addTo(map);
+}
+
+function onLocationError(e) {
+    alert(e.message);
+}
+
+//map.on('locationfound', onLocationFound);
+//map.on('locationerror', onLocationError);
 
 function render_to_map(data_markers, filter) {
     var marker;
@@ -54,7 +74,7 @@ function getRestaurants() {
 		2) Añado de forma dinámica en el select los posibles tipos de restaurantes
 		3) Llamo a la función para --> render_to_map(data_markers, 'all'); <-- para mostrar restaurantes en el mapa
 	*/
-    var url = "http://localhost/ita/restaurants/mapa/api/apiRestaurants.php";
+    var url = "http://localhost/mapa/api/apiRestaurants.php";
     $.getJSON(url,
         function(data, textStatus, jqXHR) {
             if (textStatus === 'success') {
@@ -67,7 +87,7 @@ function getRestaurants() {
                 //3) Llamo a la función para --> render_to_map(data_markers, 'all'); <-- para mostrar restaurantes en el mapa
                 render_to_map(data_markers, 'all');
 
-            } else {}
+            } else { console.log(data); }
         }
     );
 }
