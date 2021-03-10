@@ -1,15 +1,14 @@
 var map = L.map('mapid')
     .on('load', onMapLoad)
-    .on('locationfound', onLocationFound)
     .on('locationerror', onLocationError);
 
 
 //posició actual
-map.locate({ setView: true, maxZoom: 16 });
+map.locate({ setView: true, maxZoom: 10 });
 
 var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
-//en el clusters almaceno todos los markers
+//al clusters poso tots els markers
 var markers = L.markerClusterGroup();
 var data_markers = [];
 
@@ -23,21 +22,9 @@ $('#kind_food_selector').on('change', function() {
     render_to_map(data_markers, this.value);
 });
 
-function onLocationFound(e) {
-    var radius = e.accuracy / 2;
-
-    L.marker(e.latlng).addTo(map);
-    //.bindPopup('Pos. actual').openPopup();
-
-    //L.circle(e.latlng, radius).addTo(map);
-}
-
 function onLocationError(e) {
     alert(e.message);
 }
-
-//map.on('locationfound', onLocationFound);
-//map.on('locationerror', onLocationError);
 
 function render_to_map(data_markers, filter) {
     var marker;
